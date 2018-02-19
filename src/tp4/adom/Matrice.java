@@ -346,4 +346,7 @@ public class Matrice {
 		}
 		return enfant;
 	}
+	
+	
+	
 }
