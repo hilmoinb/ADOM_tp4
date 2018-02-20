@@ -15,6 +15,7 @@ public class MTSP {
 
 	/**
 	 * On cacul le cout dans les deux matrices
+	 * 
 	 * @param solution_permutation
 	 * @return
 	 */
@@ -27,7 +28,8 @@ public class MTSP {
 	}
 
 	/**
-	 * Recherche de solution non domin� a partir d'un ensemble de solutions
+	 * Recherche de solution non domin� a partir d'un ensemble de solutions
+	 * 
 	 * @param ensembledesolution
 	 * @return
 	 */
@@ -52,6 +54,46 @@ public class MTSP {
 		}
 		return ensemble_non_domine;
 
+	}
+
+	public List<Ville[]> filtre_online(int nombre_solution) {
+		List<Ville[]> archive = new ArrayList<Ville[]>();
+		int[][] solutions = new int[nombre_solution][2];
+		Ville[][] ensembledesolution = new Ville[nombre_solution][100];
+
+		// generation de chemins aléatoires
+		for (int i = 0; i < nombre_solution; i++) {
+			ensembledesolution[i] = this.m1.creerCheminAleatoire();
+		}
+
+		// evalutation des chemins aléatoires dans les 2 matrices
+		for (int i = 0; i < ensembledesolution.length; i++) {
+			solutions[i] = this.fonction_evalutation(ensembledesolution[i]);
+		}
+
+		// recherche d'un dominant
+		boolean ajout;
+		for (int i = 0; i < solutions.length; i++) {
+			ajout = true;
+			for (int j = 0; j < solutions.length; j++) {
+				if (solutions[j][0] < solutions[i][0] && solutions[j][1] < solutions[i][1]) {
+					ajout = false;
+				}
+			}
+			if (ajout) {
+				archive.add(ensembledesolution[i]);
+			}
+
+			// verification si pas dominé sinon on supprime
+			for (int j = 0; j < archive.size(); j++) {
+				if (solutions[j][0] < solutions[i][0] && solutions[j][1] < solutions[i][1]) {
+					archive.remove(solutions[j]);
+				}
+			}
+
+		}
+
+		return archive;
 	}
 
 	public Matrice getM1() {
