@@ -2,9 +2,12 @@ package tp4.adom;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.LinkedList;
+
 
 public class TspParser {
 	
@@ -46,6 +49,38 @@ public class TspParser {
 		Ville[] tab = new Ville[nbVilles];
 		villes.toArray(tab);
 		return tab;
+	}
+	
+	public static String cheminToString(Ville[] chemin) {
+		String p = chemin[0] + "";
+		for(int i=1; i<chemin.length; i++)
+			p += "-" + chemin[i];
+		return p;
+	}
+	
+	public static void changeSystemOutToFile(String file) {
+		try {
+			System.setOut(new PrintStream(new File(file)));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static void changeSystemOutToConsole(PrintStream output) {
+		System.setOut(output);
+	}
+	
+	public static void printVoisinages(Ville[][] voisinages) {
+		String str = "|\t";
+
+        for(int i=0;i<voisinages.length;i++){
+            for(int j=0;j<voisinages[i].length;j++){
+                str += voisinages[i][j] + "\t";
+            }
+            System.out.println(str + "|");
+            str = "|\t";
+        }
 	}
 
 }

@@ -42,7 +42,8 @@ public class Ville {
 
 	@Override
 	public String toString() {
-		return "Ville [pos=" + pos + ", x=" + x + ", y=" + y + "]";
+		//return "Ville [pos=" + pos + ", x=" + x + ", y=" + y + "]";
+		return "[" + pos + "]";
 	}
 
 
