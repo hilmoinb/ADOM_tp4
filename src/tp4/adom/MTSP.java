@@ -66,7 +66,7 @@ public class MTSP {
 		for (int i = 0; i < nombre_solution; i++) {
 			ensemblesolutionevalue.add(this.fonction_evalutation(new Chemin(this.m1.creerCheminAleatoire())));
 		}
-
+		this.write("allaleaon.txt", ensemblesolutionevalue);
 		// recherche d'un dominant
 		boolean ajout;
 		for (int i = 0; i < ensemblesolutionevalue.size(); i++) {
