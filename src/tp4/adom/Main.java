@@ -1,7 +1,6 @@
 package tp4.adom;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
@@ -13,17 +12,16 @@ public class Main {
 		Ville[] villes2 = parser.genererVilles();
 		MTSP m = new MTSP(villes, villes2);
 
-		// 2.2 null
-
+		List<Chemin> list = m.filtre_online(500);
+		m.write("onlinesolutions.txt", list);
 		////////////
-		List<Chemin> ensembledesolution = new ArrayList<Chemin>(500);
-
-		// generation de chemins aléatoires
-		for (int i = 0; i < 500; i++) {
-			ensembledesolution.add(new Chemin(m.getM1().creerCheminAleatoire()));
-		}
-		List<Chemin> liste = m.filtre_offLine(ensembledesolution);
-		m.write("offlinesolutions.txt", liste);
+		// List<Chemin> ensembledesolution = new ArrayList<Chemin>(500);
+		// for (int i = 0; i < 500; i++) {
+		// ensembledesolution.add(new Chemin(m.getM1().creerCheminAleatoire()));
+		// }
+		// List<Chemin> liste = m.filtre_offLine(ensembledesolution);
+		// m.write("offlinesolutions.txt", liste);
+		//
 
 	}
 

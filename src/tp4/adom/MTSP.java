@@ -58,44 +58,47 @@ public class MTSP {
 
 	}
 
-	public List<Ville[]> filtre_online(int nombre_solution) {
-		List<Ville[]> archive = new ArrayList<Ville[]>();
-		int[][] solutions = new int[nombre_solution][2];
-		Ville[][] ensembledesolution = new Ville[nombre_solution][100];
-
-		// generation de chemins aléatoires
+	public List<Chemin> filtre_online(int nombre_solution) {
+		List<Chemin> archive = new ArrayList<Chemin>();
+		// generation de chemins aléatoires et evaluations de ceux ci dans les 2
+		// martices.
+		List<Chemin> ensemblesolutionevalue = new ArrayList<Chemin>(nombre_solution);
 		for (int i = 0; i < nombre_solution; i++) {
-			ensembledesolution[i] = this.m1.creerCheminAleatoire();
-		}
-
-		// evalutation des chemins aléatoires dans les 2 matrices
-		for (int i = 0; i < ensembledesolution.length; i++) {
-			solutions[i] = this.fonction_evalutation(ensembledesolution[i]);
+			ensemblesolutionevalue.add(this.fonction_evalutation(new Chemin(this.m1.creerCheminAleatoire())));
 		}
 
 		// recherche d'un dominant
 		boolean ajout;
-		for (int i = 0; i < solutions.length; i++) {
+		for (int i = 0; i < ensemblesolutionevalue.size(); i++) {
 			ajout = true;
-			for (int j = 0; j < solutions.length; j++) {
-				if (solutions[j][0] < solutions[i][0] && solutions[j][1] < solutions[i][1]) {
+			for (int j = 0; j < ensemblesolutionevalue.size(); j++) {
+				if (ensemblesolutionevalue.get(j).getCout1() < ensemblesolutionevalue.get(i).getCout1()
+						&& ensemblesolutionevalue.get(j).getCout2() < ensemblesolutionevalue.get(i).getCout2()) {
 					ajout = false;
 				}
 			}
 			if (ajout) {
-				archive.add(ensembledesolution[i]);
+				archive.add(ensemblesolutionevalue.get(i));
 			}
-
 			// verification si pas dominé sinon on supprime
-			for (int j = 0; j < archive.size(); j++) {
-				if (solutions[j][0] < solutions[i][0] && solutions[j][1] < solutions[i][1]) {
-					archive.remove(solutions[j]);
-				}
-			}
-
+			this.trie_archive(archive);
 		}
 
 		return archive;
+	}
+
+	public void trie_archive(List<Chemin> archive) {
+		for (int i = 0; i < archive.size(); i++) {
+			Chemin courant = archive.get(i);
+			for (int j = 0; j < archive.size(); j++) {
+				if ((courant.getCout1() > archive.get(j).getCout1())
+						&& (courant.getCout2() > archive.get(j).getCout2())) {
+					archive.remove(i);
+					i = 0;
+					j = 0;
+				}
+			}
+		}
 	}
 
 	public void write(String nomfichier, List<Chemin> list) {
@@ -104,15 +107,15 @@ public class MTSP {
 			fichier.createNewFile();
 			final FileWriter writer = new FileWriter(fichier);
 			try {
-				for(int i = 0 ; i< list.size(); i++) {
-					writer.write(list.get(i).getCout1() +" " + list.get(i).getCout2()+"\n");
+				for (int i = 0; i < list.size(); i++) {
+					writer.write(list.get(i).getCout1() + " " + list.get(i).getCout2() + "\n");
 				}
-			
+
 			} finally {
 				writer.close();
 			}
 		} catch (Exception e) {
-			System.out.println("Impossible de creer le fichier");
+			e.printStackTrace();
 		}
 	}
 
