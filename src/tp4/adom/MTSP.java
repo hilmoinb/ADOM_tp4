@@ -1,5 +1,7 @@
 package tp4.adom;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,11 +21,10 @@ public class MTSP {
 	 * @param solution_permutation
 	 * @return
 	 */
-	public int[] fonction_evalutation(Ville[] solution_permutation) {
-		int[] solution = new int[2];
-		solution[0] = m1.calculerCout(solution_permutation);
-		solution[1] = m2.calculerCout(solution_permutation);
-		return solution;
+	public Chemin fonction_evalutation(Chemin solution_permutation) {
+		solution_permutation.setCout1(m1.calculerCout(solution_permutation.getChemin()));
+		solution_permutation.setCout2(m2.calculerCout(solution_permutation.getChemin()));
+		return solution_permutation;
 
 	}
 
@@ -33,23 +34,24 @@ public class MTSP {
 	 * @param ensembledesolution
 	 * @return
 	 */
-	public List<Ville[]> filtre_offLine(Ville[][] ensembledesolution) {
-		List<Ville[]> ensemble_non_domine = new ArrayList<Ville[]>();
-		int[][] solutions = new int[ensembledesolution.length][2];
-		for (int i = 0; i < ensembledesolution.length; i++) {
-			solutions[i] = this.fonction_evalutation(ensembledesolution[i]);
+	public List<Chemin> filtre_offLine(List<Chemin> ensembledesolution) {
+		List<Chemin> ensemble_non_domine = new ArrayList<Chemin>();
+		List<Chemin> ensemblesolutionevalue = new ArrayList<Chemin>(ensembledesolution.size());
+		for (int i = 0; i < ensembledesolution.size(); i++) {
+			ensemblesolutionevalue.add(fonction_evalutation(ensembledesolution.get(i)));
 		}
-		// recherche d'un dominant
+		this.write("offline_allsolutions.txt", ensemblesolutionevalue);
 		boolean ajout;
-		for (int i = 0; i < solutions.length; i++) {
+		for (int i = 0; i < ensemblesolutionevalue.size(); i++) {
 			ajout = true;
-			for (int j = 0; j < solutions.length; j++) {
-				if (solutions[j][0] < solutions[i][0] && solutions[j][1] < solutions[i][1]) {
+			for (int j = 0; j < ensemblesolutionevalue.size(); j++) {
+				if (ensemblesolutionevalue.get(j).getCout1() < ensemblesolutionevalue.get(i).getCout1()
+						&& ensemblesolutionevalue.get(j).getCout2() < ensemblesolutionevalue.get(i).getCout2()) {
 					ajout = false;
 				}
 			}
 			if (ajout) {
-				ensemble_non_domine.add(ensembledesolution[i]);
+				ensemble_non_domine.add(ensemblesolutionevalue.get(i));
 			}
 		}
 		return ensemble_non_domine;
@@ -94,6 +96,24 @@ public class MTSP {
 		}
 
 		return archive;
+	}
+
+	public void write(String nomfichier, List<Chemin> list) {
+		final File fichier = new File(nomfichier);
+		try {
+			fichier.createNewFile();
+			final FileWriter writer = new FileWriter(fichier);
+			try {
+				for(int i = 0 ; i< list.size(); i++) {
+					writer.write(list.get(i).getCout1() +" " + list.get(i).getCout2()+"\n");
+				}
+			
+			} finally {
+				writer.close();
+			}
+		} catch (Exception e) {
+			System.out.println("Impossible de creer le fichier");
+		}
 	}
 
 	public Matrice getM1() {

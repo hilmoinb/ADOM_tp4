@@ -1,6 +1,7 @@
 package tp4.adom;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
@@ -11,18 +12,18 @@ public class Main {
 		parser = new TspParser(new File("kroB100.tsp"));
 		Ville[] villes2 = parser.genererVilles();
 		MTSP m = new MTSP(villes, villes2);
-		int[] res = m.fonction_evalutation(m.getM1().creerCheminAleatoire());
-		System.out.println(res[0] + " " + res[1]);
 
 		// 2.2 null
 
 		////////////
+		List<Chemin> ensembledesolution = new ArrayList<Chemin>(500);
 
-		List<Ville[]> liste = m.filtre_online(500);
-		System.out.println(liste.size());
-		for (Ville[] v : liste) {
-			System.out.println(v);
+		// generation de chemins aléatoires
+		for (int i = 0; i < 500; i++) {
+			ensembledesolution.add(new Chemin(m.getM1().creerCheminAleatoire()));
 		}
+		List<Chemin> liste = m.filtre_offLine(ensembledesolution);
+		m.write("offlinesolutions.txt", liste);
 
 	}
 
