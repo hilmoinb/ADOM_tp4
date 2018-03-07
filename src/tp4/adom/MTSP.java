@@ -29,7 +29,7 @@ public class MTSP {
 	}
 
 	/**
-	 * Recherche de solution non domin� a partir d'un ensemble de solutions
+	 * Recherche de solution non dominé a partir d'un ensemble de solutions
 	 * 
 	 * @param ensembledesolution
 	 * @return
