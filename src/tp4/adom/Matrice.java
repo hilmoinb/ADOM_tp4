@@ -454,16 +454,7 @@ public class Matrice {
 			save.add(parent1[i]);
 		}
 		
-//		//on prend le reste à droite de parent2 (partie droite du sous chemin) et on le met au meme endroit dans enfant
-//		int cpt = NBVILLES - 1;
-//		for(int i=NBVILLES-1; i>=0; i--) {
-//			if( !save.contains(parent2[i]) ) {
-//				if( cpt>nb2 || cpt<nb1 )
-//					enfant[cpt--] = parent2[i];
-//			} else
-//				i++; //Permet de rester au même rang au prochain tour de boucle
-//		}
-		//on prend le reste à droite de parent2 (partie droite du sous chemin) et on le met au meme endroit dans enfant
+		//on prend en partant de la droite de parent2 (partie droite du sous chemin) et on met aux spots libres dans enfant en partant de la droite également
 		int cpt = NBVILLES - 1;
 		for(int i=NBVILLES-1; i>=0; i--) {
 			if( !save.contains(parent2[cpt]) ) {
